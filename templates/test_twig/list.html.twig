@@ -1,0 +1,32 @@
+{%if f is empty %}
+    <p> tableau vide</p>
+    {%else%}
+<table border="1">
+    
+    {%for element in f%}
+    {%if 'theorique' in element.Description %}
+    <tr>
+        <td>{{element.ref}}</td>
+        <td>{{element.Titre|upper}}</td>
+        <td>{{element.Description}}</td>
+        <td>{{element.nb_participants}}</td>
+        {%if element.nb_participants == 0%}
+        <td> <a href="{{path('details',{'titre':element.Titre})}}">Participer</a></td>
+        {%endif%}
+    </tr>
+    {%endif%}
+    {%endfor%}
+</table>
+
+Le nombre de formations : {{f|length}}
+{%set maxValue=0%}
+{%for element in f%}
+{%set maxValue=max(maxValue,element.nb_participants)%}
+{%endfor%}
+{%for element in f%}
+{%if element.nb_participants == maxValue %}
+<p>{{element.Titre}}</p>
+{%endif%}
+{%endfor%}
+{{maxValue}}
+{%endif%}

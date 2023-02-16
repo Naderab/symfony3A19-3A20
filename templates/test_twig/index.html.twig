@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello TestTwigController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    {{varFromController}}
+    {# commentaires #}
+    {% set obj={
+        'fname':'jhon',
+        'lname':'Doe'
+    }  %}
+
+    {{obj['fname']}}
+    {{obj['lname']}}
+
+    {% set v ="test" %}
+    {{v}}
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+        </tr>
+        {% for p in tabP %}
+        {% if p.id == 1 %}
+            <tr>
+                <td>{{p.id}}</td>
+                <td>{{p.username|upper}}</td>
+                <td>{{p.email}}</td>
+            </tr>
+        {%endif%}
+        {% endfor %}
+    </table>
+    Nombre de personnes = {{tabP|length}}
+    {%if tabP is empty%}
+    <h3>Pas d'element</h3>
+    {%endif%}
+    {%if 5 not in [1,2,3,5]%}
+    <h3>5 non présent</h3>
+    {%else%}
+    <h3>5 présent</h3>
+    {%endif%}
+    <a href="{{path('app_teacher')}}">Go to teacher</a>
+    <a href="{{path('show_teacher',{'name':v})}}">Go to teacher 2</a>
+    <img src="{{asset('hello.png')}}" >
+</div>
+{% endblock %}
