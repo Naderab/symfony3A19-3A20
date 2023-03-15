@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\Student;
+use App\Form\SearchStudentType;
 use App\Form\StudentType;
 use App\Repository\StudentRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -20,12 +21,22 @@ class StudentController extends AbstractController {
         return new Response("Bonjour ".$name.' '.$para2);
     }
     #[Route('/student', name: 'app_student')]
-    public function index(ManagerRegistry $doctrine): Response
+    public function index(Request $req,ManagerRegistry $doctrine): Response
     {
         $repo = $doctrine->getRepository(Student::class);
+        $form= $this->createForm(SearchStudentType::class);
+        $form->handleRequest($req);
         $students=$repo->findAll();
+        if($form->isSubmitted()){
+            $students = $repo->findByName($form->getData('search'));
+            return $this->render('student/index.html.twig', [
+                'students'=>$students,
+                'form'=>$form->createView()
+            ]);
+        }
         return $this->render('student/index.html.twig', [
-            'students'=>$students
+            'students'=>$students,
+            'form'=>$form->createView()
         ]);
     }
     #[Route('/addStudent',name:"Student_add")]
@@ -66,4 +77,12 @@ class StudentController extends AbstractController {
         $repo->remove($student,true);
         return $this->redirectToRoute('app_student');
     }
+
+    #[Route('/afficher',name: 'student_affiche')]
+    public function afficheStudent(StudentRepository $repo){
+        $student = $repo->findStudentByName();
+        return $this->render('student/afficheStudent.html.twig',['student'=>$student]);
+    }
+
+
 }
